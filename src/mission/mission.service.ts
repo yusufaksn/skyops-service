@@ -3,7 +3,6 @@ import { DataSource } from 'typeorm';
 import { CreateMissionDto } from './dto/create-mission.dto';
 import { Mission } from './entities/mission.entity';
 
-
 @Injectable()
 export class MissionsService {
   constructor(private readonly dataSource: DataSource) {}
@@ -16,14 +15,30 @@ export class MissionsService {
 
     try {
       const drones = await queryRunner.query(
-        `SELECT id FROM drones WHERE id = $1 AND status = 'AVAILABLE' FOR UPDATE`,
-        [dto.drone_id]
+        `
+        SELECT id 
+        FROM drones 
+        WHERE id = $1 
+          AND status = 'AVAILABLE'
+          AND NOT (
+            next_maintenance_due BETWEEN $2::timestamptz AND $3::timestamptz
+          )
+        FOR UPDATE
+        `,
+        [
+          dto.drone_id,
+          dto.planned_start,
+          dto.planned_end,
+        ]
       );
 
       if (!drones || drones.length === 0) {
-        throw new NotFoundException('Drone not found or not available.');
+        throw new NotFoundException(
+          'Drone not found, not available, or maintenance date conflicts with mission schedule.'
+        );
       }
 
+      // 2. Çakışan görev yoksa INSERT
       const result = await queryRunner.query(
         `
         INSERT INTO missions (
@@ -36,13 +51,13 @@ export class MissionsService {
             planned_start,
             planned_end
         )
-        SELECT $1, $2, $3, $4, $5, $6, $7::timestamp, $8::timestamp
+        SELECT $1, $2, $3, $4, $5, $6, $7::timestamptz, $8::timestamptz
         WHERE NOT EXISTS (
             SELECT 1
             FROM missions
             WHERE drone_id = $2
-              AND status != 'CANCELLED'
-              AND (planned_start, planned_end) OVERLAPS ($7::timestamp, $8::timestamp)
+              AND status NOT IN ('COMPLETED', 'ABORTED')
+              AND (planned_start, planned_end) OVERLAPS ($7::timestamptz, $8::timestamptz)
         )
         RETURNING *;
         `,
