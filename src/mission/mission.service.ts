@@ -38,7 +38,6 @@ export class MissionsService {
         );
       }
 
-      // 2. Çakışan görev yoksa INSERT
       const result = await queryRunner.query(
         `
         INSERT INTO missions (
