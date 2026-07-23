@@ -9,6 +9,7 @@ import { DroneStatus } from './enums/drone-status.enum';
 
 @Injectable()
 export class DroneService {
+  private static readonly MAINTENANCE_INTERVAL_DAYS = 90;
   constructor(
     @InjectRepository(Drone)
     private readonly droneRepository: Repository<Drone>,
@@ -61,9 +62,10 @@ export class DroneService {
   }
 
   private calculateNextMaintenanceDate(): Date {
-    const date = new Date();
-    date.setDate(date.getDate() + 90);
-
+      const date = new Date();
+      date.setDate(
+        date.getDate() + DroneService.MAINTENANCE_INTERVAL_DAYS,
+      );
     return date;
   }
 }

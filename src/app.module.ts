@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DroneModule } from './drone/drone.module';
+import { MissionModule } from './mission/mission.module';
 
 
 
@@ -26,6 +27,8 @@ import { DroneModule } from './drone/drone.module';
     }),
 
     DroneModule,
+
+    MissionModule,
 
    
   ],

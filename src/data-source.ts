@@ -9,6 +9,6 @@ export default new DataSource({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'skyops_db',
   entities: ['src/**/*.entity.ts'],
-  migrations: ['src/migrations/*.ts'],
+  migrations: ['src/database/migrations/*.ts'],
   synchronize: false,
 });
