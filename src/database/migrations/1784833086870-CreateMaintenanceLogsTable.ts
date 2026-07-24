@@ -38,23 +38,26 @@ export class CreateMaintenanceLogsTable1700000000000 implements MigrationInterfa
           },
           {
             name: 'date_performed',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
             isNullable: false,
           },
           {
             name: 'flight_hours_at_maintenance',
-            type: 'float',
+            type: 'numeric',
+            precision: 10,
+            scale: 2,
             isNullable: false,
+            default: 0,
           },
           {
             name: 'created_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
         ],
@@ -62,7 +65,7 @@ export class CreateMaintenanceLogsTable1700000000000 implements MigrationInterfa
       true,
     );
 
-    // 2. Performans İçin Drone ID Index'i (Foreign Key Yok)
+    // 2. Performans İçin Drone ID Index'i
     await queryRunner.createIndex(
       'maintenance_logs',
       new TableIndex({

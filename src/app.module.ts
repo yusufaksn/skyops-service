@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DroneModule } from './drone/drone.module';
 import { MissionModule } from './mission/mission.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
 
 
 
@@ -29,6 +30,8 @@ import { MissionModule } from './mission/mission.module';
     DroneModule,
 
     MissionModule,
+
+    MaintenanceModule,
 
    
   ],
