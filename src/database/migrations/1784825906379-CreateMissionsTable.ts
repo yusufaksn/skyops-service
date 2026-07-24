@@ -20,6 +20,7 @@ export class CreateMissionsTable1784825906379
         "flight_hours_logged" numeric(10,2),
         "abort_reason" TEXT,
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+          "pre_flight_checked" BOOLEAN NOT NULL DEFAULT FALSE,
 
         CONSTRAINT "PK_missions_id" PRIMARY KEY ("id")
       );

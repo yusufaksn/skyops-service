@@ -77,6 +77,13 @@ export class Mission {
   abort_reason?: string;
 
   @Column({
+    name: 'pre_flight_checked',
+    type: 'boolean',
+    default: false,
+  })
+  preFlightChecked?: boolean;
+
+  @Column({
     type: 'timestamp',
     default: () => 'now()',
   })
