@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MissionController } from './mission.controller';
 import { MissionsService } from './mission.service';
 
-// Strateji sınıflarını import et (dosya yollarını kendi klasör yapına göre kontrol et)
 import { AbortedMissionStrategy } from './strategies/aborted.query';
 import { CompletedMissionStrategy } from './strategies/completed.query';
 import { InProgressMissionStrategy } from './strategies/in-progress.query';
