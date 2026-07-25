@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Put,
+  Get,
   Body,
   Param,
   HttpCode,
@@ -16,6 +17,11 @@ import { Mission } from './entities/mission.entity';
 @Controller('missions') 
 export class MissionController {
   constructor(private readonly missionsService: MissionsService) {}
+
+  @Get()
+  async findAll() {
+    return this.missionsService.findAll();
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

@@ -1,98 +1,132 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# SkyOps Drone Fleet Management
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend application for managing drones, missions, maintenance records, and fleet reports.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech Stack
 
-## Description
+- NestJS
+- TypeORM
+- PostgreSQL
+- Docker & Docker Compose
+- Jest
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- Drone Management
+- Mission Lifecycle Management
+- Maintenance Tracking
+- Fleet Health Reports
+- Database Migrations
+- Docker Support
 
-```bash
-$ npm install
-```
+## Architecture Notes
 
-## Compile and run the project
+- Strategy Pattern is used for mission status transitions.
+- Database transactions are used to ensure data consistency.
+- Row-level locking is used to help prevent race conditions during mission updates.
+
+## Getting Started
+
+Start the application:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker compose up -d --build
 ```
 
-## Run tests
+## Seed Data
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker exec -i skyops_postgres psql -U postgres -d skyops_db < database/seeds/seed.sql
 ```
 
-## Deployment
+## Running Tests
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Unit Test
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx jest src/maintenance/maintenance.service.spec.ts
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+E2E Test
 
-## Resources
+```bash
+npx jest --config ./test/jest-e2e.json test/mission-lifecycle.e2e-spec.ts --no-cache
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## Frontend
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+http://localhost
+```
 
-## Support
+## API Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Health Check
 
-## Stay in touch
+```
+GET http://localhost:3000/api/health
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Fleet Health Report
 
-## License
+```
+GET http://localhost:3000/api/reports/fleet-health
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Create Mission
+
+```
+POST http://localhost:3000/api/missions
+```
+
+```json
+{
+  "name": "Wind Turbine E2E Field Inspection",
+  "drone_id": "8f12a9c3-4d2b-4e89-a21b-5e638d9d83a1",
+  "pilot_name": "John Doe",
+  "site_location": "Izmir Wind Farm",
+  "mission_type": "WIND_TURBINE_INSPECTION",
+  "planned_start": "2026-07-25T10:00:00.000Z",
+  "planned_end": "2026-07-25T12:00:00.000Z"
+}
+```
+
+### Update Mission Status
+
+```
+PUT http://localhost:3000/api/missions/:id/status
+```
+
+#### PRE_FLIGHT_CHECK
+
+```json
+{
+  "status": "PRE_FLIGHT_CHECK"
+}
+```
+
+#### IN_PROGRESS
+
+```json
+{
+  "status": "IN_PROGRESS"
+}
+```
+
+#### COMPLETED
+
+```json
+{
+  "status": "COMPLETED",
+  "flightHoursLogged": 1.5
+}
+```
+
+#### ABORTED
+
+```json
+{
+  "status": "ABORTED",
+  "abortReason": "Adverse weather conditions (severe wind)"
+}
+```

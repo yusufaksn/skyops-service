@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
+import { join } from 'path';
 
 export default new DataSource({
   type: 'postgres',
@@ -8,7 +9,9 @@ export default new DataSource({
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'skyops_db',
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['src/database/migrations/*.ts'],
+
+  entities: [join(__dirname, '**/*.entity.{js,ts}')],
+  migrations: [join(__dirname, 'database/migrations/*.{js,ts}')],
+
   synchronize: false,
 });

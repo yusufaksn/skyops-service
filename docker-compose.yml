@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15-alpine
     container_name: skyops_postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -13,6 +11,51 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d skyops_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - skyops-net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skyops_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: skyops_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npm run migration:run:prod && node dist/main"
+    networks:
+      - skyops-net
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: skyops_client
+    restart: unless-stopped
+    ports:
+      - "80:5173"
+    depends_on:
+      - api
+    networks:
+      - skyops-net
 
 volumes:
   postgres_data:
+
+networks:
+  skyops-net:
+    driver: bridge

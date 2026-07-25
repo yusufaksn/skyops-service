@@ -2,7 +2,6 @@ import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export class CreateMaintenanceLogsTable1700000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // 1. maintenance_logs Tablosu
     await queryRunner.createTable(
       new Table({
         name: 'maintenance_logs',
@@ -65,7 +64,6 @@ export class CreateMaintenanceLogsTable1700000000000 implements MigrationInterfa
       true,
     );
 
-    // 2. Performans İçin Drone ID Index'i
     await queryRunner.createIndex(
       'maintenance_logs',
       new TableIndex({

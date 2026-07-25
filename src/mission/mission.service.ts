@@ -16,6 +16,26 @@ export class MissionsService {
   private readonly strategies: MissionStrategy[],
 ) {}
 
+
+async findAll() {
+  return await this.dataSource.query(`
+    SELECT 
+      m.id,
+      m.name AS "missionName",
+      m.pilot_name AS "pilotName",
+      m.site_location AS "siteLocation",
+      m.mission_type AS "missionType",
+      m.status AS "missionStatus",
+      m.planned_start AS "plannedStart",
+      m.planned_end AS "plannedEnd",
+      d.model AS "droneModel",
+      d.serial_number AS "droneSerial"
+    FROM missions AS m
+    LEFT JOIN drones AS d ON m.drone_id = d.id
+    ORDER BY m.planned_start DESC
+  `);
+}
+
 async create(dto: CreateMissionDto): Promise<Mission> {
   
   if (new Date(dto.planned_start) < new Date()) {
