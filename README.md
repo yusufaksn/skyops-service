@@ -18,12 +18,14 @@ Backend application for managing drones, missions, maintenance records, and flee
 - Fleet Health Reports
 - Database Migrations
 - Docker Support
+- Mission History Tracking
 
 ## Architecture Notes
 
 - Strategy Pattern is used for mission status transitions.
 - Database transactions are used to ensure data consistency.
 - Row-level locking is used to help prevent race conditions during mission updates.
+- Mission history records are maintained to provide an audit trail of mission status changes.
 
 ## Getting Started
 
