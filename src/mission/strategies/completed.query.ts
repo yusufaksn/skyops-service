@@ -42,9 +42,14 @@ export class CompletedMissionStrategy implements MissionStrategy {
 
 
   async execute(missionId: string, dto: UpdateMissionStatusDto) {
+    if (dto.flightHoursLogged === undefined) {
+      throw new BadRequestException(
+        'Flight hours are required when completing a mission.',
+      );
+    }
     return this.dataSource.query(this.query, [
       missionId,
-      dto.flightHoursLogged ?? 0, // <-- DTO'daki alan adıyla eşleştirdik
+      dto.flightHoursLogged ?? 0, 
     ]);
   }
 }

@@ -33,14 +33,13 @@ export class AbortedMissionStrategy implements MissionStrategy {
     return status === MissionStatus.ABORTED;
   }
 
- 
-
   async execute(missionId: string, dto: UpdateMissionStatusDto) {
      if (!dto.abortReason?.trim()) {
       throw new BadRequestException(
         'Abort reason is required when aborting a mission.',
       );
     }
+      console.log('ABORTED STRATEGY CALLED', dto);
     return this.dataSource.query(this.query, [
       missionId,
       dto.abortReason ?? null,
